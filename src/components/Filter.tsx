@@ -1,49 +1,36 @@
 import { useState } from 'react';
+import { Status } from '../App';
 
 type Props = {
-  changeOption: (option: string) => void;
+  changeOption: (option: Status) => void;
 };
 
 export const FilterOptions = ({ changeOption }: Props) => {
-  const [option, setOption] = useState('All');
+  const [option, setOption] = useState<Status>(Status.All);
+  const filters = [Status.All, Status.Active, Status.Completed];
+
+  const handleClick = (filter: Status) => {
+    setOption(filter);
+    changeOption(filter);
+  };
+
+  const getLinkClass = (filter: string) => {
+    return option === filter ? 'filter__link selected' : 'filter__link';
+  };
 
   return (
     <nav className="filter" data-cy="Filter">
-      <a
-        href="#/"
-        className={`filter__link ${option === 'All' && 'selected'}`}
-        data-cy="FilterLinkAll"
-        onClick={() => {
-          setOption('All');
-          changeOption('All');
-        }}
-      >
-        All
-      </a>
-
-      <a
-        href="#/active"
-        className={`filter__link ${option === 'Active' && 'selected'}`}
-        data-cy="FilterLinkActive"
-        onClick={() => {
-          setOption('Active');
-          changeOption('Active');
-        }}
-      >
-        Active
-      </a>
-
-      <a
-        href="#/completed"
-        className={`filter__link ${option === 'Completed' && 'selected'}`}
-        data-cy="FilterLinkCompleted"
-        onClick={() => {
-          setOption('Completed');
-          changeOption('Completed');
-        }}
-      >
-        Completed
-      </a>
+      {filters.map(filter => (
+        <a
+          key={filter}
+          href="#/"
+          className={getLinkClass(filter)}
+          data-cy={`FilterLink${filter}`}
+          onClick={() => handleClick(filter)}
+        >
+          {filter}
+        </a>
+      ))}
     </nav>
   );
 };

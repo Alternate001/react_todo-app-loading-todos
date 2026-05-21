@@ -7,16 +7,22 @@ import { Todo } from './types/Todo';
 import { TodoList } from './components/TodoList';
 import { FilterOptions } from './components/Filter';
 
+export enum Status {
+  All = 'All',
+  Active = 'Active',
+  Completed = 'Completed',
+}
+
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [filter, setFilter] = useState('All');
   const filteredTodos = todos.filter(todo => {
     switch (filter) {
-      case 'Active':
-        return !todo.completed;
-      case 'Completed':
+      case Status.Completed:
         return todo.completed;
+      case Status.Active:
+        return !todo.completed;
       default:
         return true;
     }
